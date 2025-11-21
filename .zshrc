@@ -14,6 +14,7 @@ if [ ! -d "$ZINIT_HOME" ]; then
    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 fi
 
+
 # Source/Load zinit
 source "${ZINIT_HOME}/zinit.zsh"
 
@@ -27,6 +28,12 @@ zinit light zsh-users/zsh-autosuggestions
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+
+# SSH
+if [ -z "$SSH_AUTH_SOCK" ]; then
+    eval $(keychain --eval --quiet ~/.ssh/id_ed25519)
+fi
 
 # History
 HISTSIZE=5000
@@ -44,6 +51,7 @@ setopt hist_find_no_dups
 # Aliases
 alias ls='ls --color'
 alias vim='nvim'
+alias vi='nvim'
 alias c='clear'
 
 # Keybindngs
@@ -54,5 +62,3 @@ bindkey "^[[1;5D" backward-word
 bindkey '^H' backward-kill-word
 bindkey '5~' kill-word
 bindkey "\e[3~" delete-char
-
-. "$HOME/.local/bin/env"
