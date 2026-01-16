@@ -8,6 +8,7 @@ return {
 				javascript = { "prettier" },
 				typescript = { "prettier" },
 				css = { "prettier" },
+				go = { "goimports", "gofumpt" },
 			},
 		})
 

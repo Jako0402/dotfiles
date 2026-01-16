@@ -14,6 +14,7 @@ return {
 			"html",
 			"json",
 			"markdown",
+			"go",
 		},
 	},
 	config = function(_, opts)
