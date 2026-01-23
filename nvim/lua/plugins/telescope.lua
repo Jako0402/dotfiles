@@ -18,5 +18,11 @@ return {
 				cwd = vim.fn.stdpath("config"),
 			})
 		end)
+
+		vim.keymap.set("n", "<leader>eh", function()
+			builtin.find_files({
+				cwd = vim.fn.expand("$HOME/.config/hypr"),
+			})
+		end)
 	end,
 }
