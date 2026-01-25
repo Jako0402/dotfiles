@@ -1,7 +1,9 @@
 return {
 	"stevearc/conform.nvim",
 	config = function()
-		require("conform").setup({
+		local conform = require("conform")
+
+		conform.setup({
 			formatters_by_ft = {
 				lua = { "stylua" },
 				python = { "black" },
@@ -12,10 +14,21 @@ return {
 			},
 		})
 
+		-- Format on save (Autocmd)
 		vim.api.nvim_create_autocmd("BufWritePre", {
-			callback = function()
-				require("conform").format({ async = false })
+			pattern = "*",
+			callback = function(args)
+				conform.format({ bufnr = args.buf })
 			end,
 		})
+
+		-- Shortcut: Alt + Shift + F (Visual and Normal mode)
+		vim.keymap.set({ "n", "v" }, "<A-S-f>", function()
+			conform.format({
+				lsp_fallback = true,
+				async = false,
+				timeout_ms = 500,
+			})
+		end, { desc = "Format file or range (Alt+Shift+F)" })
 	end,
 }
