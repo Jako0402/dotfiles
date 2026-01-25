@@ -5,15 +5,21 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+git config --global url."git@github.com:".insteadOf "https://github.com/"
+
+# SSH
+if [ -z "$SSH_AUTH_SOCK" ]; then
+    eval $(keychain --eval --quiet ~/.ssh/id_ed25519)
+fi
+
 # Set the directory we want to store zinit and plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
-# Download Zinit, if it's not there yet
+# Download Zinit using SSH if it's not there yet
 if [ ! -d "$ZINIT_HOME" ]; then
    mkdir -p "$(dirname $ZINIT_HOME)"
-   git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+   git clone git@github.com:zdharma-continuum/zinit.git "$ZINIT_HOME"
 fi
-
 
 # Source/Load zinit
 source "${ZINIT_HOME}/zinit.zsh"
@@ -25,15 +31,15 @@ zinit ice depth=1; zinit light romkatv/powerlevel10k
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
+zinit light agkozak/zsh-z
+
+
+autoload -Uz compinit && compinit
+zstyle ':completion:*' menu select
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-
-# SSH
-if [ -z "$SSH_AUTH_SOCK" ]; then
-    eval $(keychain --eval --quiet ~/.ssh/id_ed25519)
-fi
 
 # History
 HISTSIZE=5000
@@ -48,14 +54,15 @@ setopt hist_save_no_dups
 setopt hist_ignore_dups
 setopt hist_find_no_dups
 
+
 # Aliases
-alias ls='ls --color'
+alias ls='ls --color -a'
 alias vim='nvim'
 alias vi='nvim'
 alias c='clear'
 
 # Keybindngs
-bindkey '^ ' complete-word
+bindkey '^ ' menu-expand-or-complete
 bindkey '^I' autosuggest-accept
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
