@@ -1,50 +1,50 @@
 return {
 	"neovim/nvim-lspconfig",
 	config = function()
-		local cfg = vim.lsp.config
 		local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
-
-		-- Add borders to all floating windows (Hover and Diagnostics)
 		local border = "rounded"
+
+		-- UI Customization
 		vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = border })
-		vim.lsp.handlers["textDocument/signatureHelp"] =
-			vim.lsp.with(vim.lsp.handlers.signature_help, { border = border })
 		vim.diagnostic.config({ float = { border = border } })
 
-		local on_attach = function(_, bufnr)
-			local map = function(mode, lhs, rhs)
-				vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, silent = true })
-			end
+		-- Global Keybinds via LspAttach
+		vim.api.nvim_create_autocmd("LspAttach", {
+			callback = function(args)
+				local bufnr = args.buf
+				local map = function(mode, lhs, rhs)
+					vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, silent = true })
+				end
 
-			-- VS Code Style Keybinds
-			map("n", "<F12>", vim.lsp.buf.definition)
-			map("n", "gd", vim.lsp.buf.definition)
-			map("n", "<F2>", vim.lsp.buf.rename)
-			map("n", "<C-.>", vim.lsp.buf.code_action)
-			map("n", "gr", vim.lsp.buf.references)
+				-- VS Code Style Keybinds
+				map("n", "<F12>", vim.lsp.buf.definition)
+				map("n", "gd", vim.lsp.buf.definition)
+				map("n", "<F2>", vim.lsp.buf.rename)
+				map("n", "<C-.>", vim.lsp.buf.code_action)
+				map("n", "gr", vim.lsp.buf.references)
+				map("n", "<C-h>", vim.lsp.buf.hover)
+				map("n", "<C-e>", vim.diagnostic.open_float)
+			end,
+		})
 
-			-- Custom Hover Mapping (Ctrl+h)
-			map("n", "<C-h>", vim.lsp.buf.hover)
+		--- Server Specific Configurations ---
 
-			-- Diagnostic specific popup (Optional: Ctrl+e for Errors)
-			map("n", "<C-e>", vim.diagnostic.open_float)
-		end
+		-- Python
+		vim.lsp.config("ruff", {
+			init_options = {
+				settings = {
+					lineLength = 100,
+				},
+			},
+		})
 
-		-- Server Configurations
-		cfg.lua_ls = {
-			on_attach = on_attach,
-			capabilities = capabilities,
+		-- Lua
+		vim.lsp.config("lua_ls", {
 			settings = { Lua = { diagnostics = { globals = { "vim" } } } },
-		}
+		})
 
-		cfg.pyright = { on_attach = on_attach, capabilities = capabilities }
-		cfg.cssls = { on_attach = on_attach, capabilities = capabilities }
-		cfg.jdtls = { on_attach = on_attach, capabilities = capabilities }
-
-		-- Go Support
-		cfg.gopls = {
-			on_attach = on_attach,
-			capabilities = capabilities,
+		-- Go
+		vim.lsp.config("gopls", {
 			settings = {
 				gopls = {
 					analyses = { unusedparams = true },
@@ -52,13 +52,13 @@ return {
 					gofumpt = true,
 				},
 			},
-		}
+		})
 
-		-- Enable Servers (Neovim 0.11+)
-		vim.lsp.enable("lua_ls")
-		vim.lsp.enable("pyright")
-		vim.lsp.enable("cssls")
-		vim.lsp.enable("jdtls")
-		vim.lsp.enable("gopls")
+		-- Others
+		vim.lsp.config("cssls", {})
+		vim.lsp.config("jdtls", {})
+
+		-- Enable all servers
+		vim.lsp.enable({ "ruff", "ty", "lua_ls", "cssls", "jdtls", "gopls" })
 	end,
 }

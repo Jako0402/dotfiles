@@ -29,7 +29,7 @@ return {
 			ensure_installed = {
 				"cssls",
 				"lua_ls",
-				"pyright",
+				"ruff",
 				"jdtls",
 				"gopls",
 			},
@@ -41,9 +41,7 @@ return {
 			ensure_installed = {
 				"prettier", -- prettier formatter
 				"stylua", -- lua formatter
-				"black", -- Python
-				"flake8",
-				"pylint",
+				"ty", -- Python
 				"ts_ls", -- JS
 				"gofumpt", -- GO
 				"goimports",

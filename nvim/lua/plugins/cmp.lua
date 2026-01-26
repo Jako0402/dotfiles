@@ -10,27 +10,33 @@ return {
 		local cmp = require("cmp")
 
 		cmp.setup({
-			mapping = cmp.mapping.preset.insert({
-				-- Trigger completion menu
-				["<C-Space>"] = cmp.mapping.complete(),
+			window = {
+				completion = cmp.config.window.bordered({
+					max_height = 10, -- Limit the popup to 10 rows
+					side_padding = 1, -- Cleaner spacing
+				}),
+				documentation = cmp.config.window.bordered(),
+			},
 
-				-- Navigate suggestions
+			mapping = cmp.mapping.preset.insert({
+				["<C-Space>"] = cmp.mapping.complete(),
 				["<C-n>"] = cmp.mapping.select_next_item(),
 				["<C-p>"] = cmp.mapping.select_prev_item(),
-
-				-- Confirm selection with Tab or Enter
 				["<CR>"] = cmp.mapping.confirm({ select = true }),
 				["<Tab>"] = cmp.mapping.confirm({ select = true }),
-
-				-- Use Escape to close the menu
 				["<Esc>"] = cmp.mapping.abort(),
 			}),
 
+			-- 2. LIMIT SOURCE RESULTS
 			sources = cmp.config.sources({
-				{ name = "nvim_lsp" },
-				{ name = "buffer" },
-				{ name = "path" },
+				{ name = "nvim_lsp", max_item_count = 15 },
+				{ name = "buffer", max_item_count = 5 },
+				{ name = "path", max_item_count = 5 },
 			}),
+
+			performance = {
+				max_view_entries = 15,
+			},
 		})
 	end,
 }
