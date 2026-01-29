@@ -32,7 +32,7 @@ zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 zinit light agkozak/zsh-z
-
+zinit light MichaelAquilina/zsh-autoswitch-virtualenv
 
 autoload -Uz compinit && compinit
 zstyle ':completion:*' menu select
