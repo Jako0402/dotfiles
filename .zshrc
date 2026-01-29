@@ -33,6 +33,8 @@ zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 zinit light agkozak/zsh-z
 zinit light MichaelAquilina/zsh-autoswitch-virtualenv
+zinit light zsh-users/zsh-history-substring-search
+
 
 autoload -Uz compinit && compinit
 zstyle ':completion:*' menu select
@@ -69,3 +71,7 @@ bindkey "^[[1;5D" backward-word
 bindkey '^H' backward-kill-word
 bindkey '5~' kill-word
 bindkey "\e[3~" delete-char
+
+# Substring search
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
