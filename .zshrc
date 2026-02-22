@@ -8,8 +8,9 @@ fi
 git config --global url."git@github.com:".insteadOf "https://github.com/"
 
 # SSH
-if [ -z "$SSH_AUTH_SOCK" ]; then
-    eval $(keychain --eval --quiet ~/.ssh/id_ed25519)
+if [ -x /usr/bin/keychain ]; then
+    /usr/bin/keychain --quiet --nogui ~/.ssh/id_ed25519
+    [[ -f $HOME/.keychain/$HOST-sh ]] && source $HOME/.keychain/$HOST-sh
 fi
 
 # Set the directory we want to store zinit and plugins
